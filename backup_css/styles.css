@@ -1,0 +1,372 @@
+@font-face {
+    font-family: 'Clearstone';
+    font-style: normal;
+    font-weight: 400;
+    src: url('https://vogastudios.com/wp-content/uploads/2025/09/ClearstonePersonalUse-K7n3X.otf') format('OpenType');
+}
+
+img.wp-smiley, img.emoji {
+    display: inline !important;
+    border: none !important;
+    box-shadow: none !important;
+    height: 1em !important;
+    width: 1em !important;
+    margin: 0 0.07em !important;
+    vertical-align: -0.1em !important;
+    background: none !important;
+    padding: 0 !important;
+}
+
+img:is([sizes=auto i],[sizes^="auto," i]) {
+    contain-intrinsic-size: 3000px 1500px;
+}
+
+:root {
+    --contrast: #393939;
+    --contrast-2: #EBE4D4;
+    --contrast-3: #F8F5EE;
+    --base: #fbfbfb;
+    --base-2: #fbfbfb;
+    --base-3: #fbfbfb;
+    --accent: #af9969;
+    --v2-color-boda: #5F7564;
+    --gb-container-width: 1200px;
+}
+
+body {
+    background-color: var(--base-2);
+    color: var(--contrast);
+    font-family: Lora, serif;
+    font-weight: normal;
+    font-style: normal;
+    overflow: auto;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+a:hover, a:focus, a:active {
+    color: var(--contrast);
+}
+
+.wp-block-group__inner-container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.site-header,
+#site-navigation,
+.navigation-clone,
+#mobile-header,
+#secondary-navigation,
+.generate-page-header,
+.page-header-image,
+.page-header-image-single,
+.site-footer {
+    display: none !important;
+}
+
+.zoom-animar {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease;
+    will-change: transform, opacity;
+}
+
+.zoom-animar.zoom-in {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.zoom-animar.zoom-out {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.elementor-editor-active .zoom-animar {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+.music-btn-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: pointer;
+}
+
+.music-icon-box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: color-mix(in srgb, var(--v2-color-boda) 40%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+#iconoMusica {
+    width: 28px;
+    height: 28px;
+    animation: musicBounce 2s infinite ease-in-out;
+}
+
+#iconoMusica path {
+    fill: #FFFFFF;
+}
+
+.pulse-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: color-mix(in srgb, var(--v2-color-boda) 30%, transparent);
+    border-radius: 50%;
+    z-index: 1;
+    animation: pulseExpand 2s infinite;
+}
+
+@keyframes musicBounce {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-5px) rotate(5deg); }
+}
+
+@keyframes pulseExpand {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(2.2); opacity: 0; }
+}
+
+.music-btn-container.paused .pulse-ring {
+    animation-play-state: paused;
+    opacity: 0;
+}
+
+.music-btn-container.paused .music-icon-box {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+body:not(.elementor-editor-active) #v2-capa-bloqueo {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    transition: opacity 1.2s ease-in-out, visibility 1.2s !important;
+}
+
+#v2-capa-bloqueo.v2-abrir {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden;
+}
+
+.v2-sobre-izq, .v2-sobre-der {
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    will-change: transform;
+}
+
+#v2-capa-bloqueo.v2-abrir .v2-sobre-izq {
+    transform: translateX(-100%) !important;
+}
+
+#v2-capa-bloqueo.v2-abrir .v2-sobre-der {
+    transform: translateX(100%) !important;
+}
+
+#v2-boton-control {
+    pointer-events: auto !important;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+#v2-boton-control * {
+    pointer-events: none !important;
+}
+
+#v2-boton-control.paused {
+    filter: grayscale(1);
+    opacity: 0.6 !important;
+}
+
+.v2-music-btn-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: pointer;
+}
+
+.v2-music-icon-box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: color-mix(in srgb, var(--v2-color-boda) 40%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+#v2-iconoMusica {
+    width: 28px;
+    height: 28px;
+    animation: v2-musicBounce 2s infinite ease-in-out;
+}
+
+#v2-iconoMusica path {
+    fill: #FFFFFF;
+}
+
+.v2-pulse-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: color-mix(in srgb, var(--v2-color-boda) 30%, transparent);
+    border-radius: 50%;
+    z-index: 1;
+    animation: v2-pulseExpand 2s infinite;
+}
+
+@keyframes v2-musicBounce {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-5px) rotate(5deg); }
+}
+
+@keyframes v2-pulseExpand {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(2.2); opacity: 0; }
+}
+
+.v2-music-btn-container.paused .v2-pulse-ring {
+    animation-play-state: paused;
+    opacity: 0;
+}
+
+.v2-music-btn-container.paused .v2-music-icon-box {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.v2-aparecer {
+    animation: v2-fadeInUp 0.8s forwards;
+}
+
+@keyframes v2-fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.boton-latido {
+    display: inline-block;
+    animation: latido-suave 1.5s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+.boton-latido:hover {
+    animation-play-state: paused;
+    transform: scale(1.05);
+}
+
+@keyframes latido-suave {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.animar {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.5s ease-out;
+}
+
+.animar.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.elementor-editor-active .animar {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+.ocultar-cuerpo .elemento-a-ocultar {
+    display: none !important;
+}
+
+.es-un-acto .clase-del-acto {
+    display: none !important;
+}
+
+.e-con.e-parent:nth-of-type(n+4):not(.e-lazyloaded):not(.e-no-lazyload),
+.e-con.e-parent:nth-of-type(n+4):not(.e-lazyloaded):not(.e-no-lazyload) * {
+    background-image: none !important;
+}
+
+@media screen and (max-height: 1024px) {
+    .e-con.e-parent:nth-of-type(n+3):not(.e-lazyloaded):not(.e-no-lazyload),
+    .e-con.e-parent:nth-of-type(n+3):not(.e-lazyloaded):not(.e-no-lazyload) * {
+        background-image: none !important;
+    }
+}
+
+@media screen and (max-height: 640px) {
+    .e-con.e-parent:nth-of-type(n+2):not(.e-lazyloaded):not(.e-no-lazyload),
+    .e-con.e-parent:nth-of-type(n+2):not(.e-lazyloaded):not(.e-no-lazyload) * {
+        background-image: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-navigation .menu-bar-item:hover > a,
+    .main-navigation .menu-bar-item.sfHover > a {
+        background: none;
+        color: var(--contrast);
+    }
+}
+
+.elementor-template-full-width .site-content {
+    display: block;
+}
+
+.gb-container .wp-block-image img {
+    vertical-align: middle;
+}
+
+.gb-grid-wrapper .wp-block-image {
+    margin-bottom: 0;
+}
+
+.gb-highlight {
+    background: none;
+}
+
+.gb-shape {
+    line-height: 0;
+}
