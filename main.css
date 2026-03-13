@@ -1942,13 +1942,15 @@
   .elementor-1947 .elementor-element.elementor-element-21f0bc0:not(.elementor-motion-effects-element-type-background)>.elementor-widget-wrap {
     background-image: url("images/iniciotop.png");
     background-position: top center;
-    background-size: 100% auto;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   .elementor-1947 .elementor-element.elementor-element-21f0bc0>.elementor-element-populated>.elementor-background-overlay {
     background-image: url("images/iniciobot.png");
     background-position: bottom center;
-    background-size: 100% auto;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 }
 
@@ -2096,7 +2098,7 @@
 .elementor-1947 .elementor-element.elementor-element-2bd1015 .elementor-heading-title,
 .elementor-1947 .elementor-element.elementor-element-d760063 .elementor-heading-title {
   font-family: Cormorant, Sans-serif;
-  font-size: 1.2em;
+  font-size: 1.6em;
   font-weight: 600;
   color: #2c2f52;
 }
@@ -4790,14 +4792,16 @@ body {
 @media (max-width: 767px) {
   .elementor-1947 .elementor-element.elementor-element-21f0bc0>.elementor-element-populated>.elementor-background-overlay {
     background-image: url("images/iniciobot.png");
-    background-size: 100% auto;
+    background-size: contain;
+    background-repeat: no-repeat;
     opacity: 1;
   }
 
   .elementor-1947 .elementor-element.elementor-element-21f0bc0>.elementor-widget-wrap>.elementor-motion-effects-container>.elementor-motion-effects-layer,
   .elementor-1947 .elementor-element.elementor-element-21f0bc0:not(.elementor-motion-effects-element-type-background)>.elementor-widget-wrap {
     background-image: url("images/iniciotop.png");
-    background-size: 100% auto;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   .elementor-1947 .elementor-element.elementor-element-6e2e2ce,
@@ -5159,7 +5163,7 @@ body {
 
   .elementor-1947 .elementor-element.elementor-element-c0050d1 .elementor-heading-title,
   .elementor-1947 .elementor-element.elementor-element-d760063 .elementor-heading-title {
-    font-size: 0.9em;
+    font-size: 1em;
   }
 
   .elementor-1947 .elementor-element.elementor-element-a4c7c8a>.elementor-element-populated {

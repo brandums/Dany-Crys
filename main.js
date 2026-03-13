@@ -312,17 +312,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                 optNo.value = "0";
                 optNo.innerText = "No podré asistir";
                 formAsistencia.appendChild(optNo);
-
-                // Controlar campo de Bus
-                formAsistencia.addEventListener('change', function () {
-                    if (this.value === "0") {
-                        if (busContainer) busContainer.style.display = 'none';
-                    } else {
-                        if (busContainer) busContainer.style.display = 'block';
-                    }
-                });
-
-                // Disparar evento para estado inicial
+                
+                // Event listener for Bus control is now registered globally outside the token block.
                 formAsistencia.dispatchEvent(new Event('change'));
             }
 
@@ -334,6 +325,39 @@ document.addEventListener("DOMContentLoaded", async function () {
     } else {
         if (nameDisplay) nameDisplay.innerText = "Invitado Genérico";
         if (ticketsDisplay) ticketsDisplay.innerText = "-";
+    }
+
+    // Controlar campo de Bus independientemente del token
+    if (formAsistencia) {
+        formAsistencia.addEventListener('change', function () {
+            const busSelect = document.getElementById('form-field-bus');
+            // Validar ambas posibles formas en que un invitado indique que no va
+            const noVal = this.value === "0" || this.value === "No podré, lo siento";
+            if (noVal) {
+                if (busContainer) busContainer.style.display = 'block'; 
+                if (busSelect) {
+                    let noOption = Array.from(busSelect.options).find(opt => opt.value === "No" || opt.text.toLowerCase() === "no");
+                    if (!noOption) {
+                        noOption = document.createElement('option');
+                        noOption.value = "No";
+                        noOption.innerText = "No";
+                        busSelect.appendChild(noOption);
+                    }
+                    busSelect.value = noOption.value;
+                    busSelect.disabled = true; // Deshabilitar para que no pueda cambiarlo
+                }
+            } else {
+                if (busContainer) busContainer.style.display = 'block';
+                if (busSelect) {
+                    busSelect.disabled = false; 
+                }
+            }
+        });
+
+        // Trigger inicial si no hay token, para configurar el estado por defecto de la opción en el HTML (usualmente index 0, que es "Si asistiré")
+        if (!token) {
+            formAsistencia.dispatchEvent(new Event('change'));
+        }
     }
 
     // Interceptar envío del formulario
@@ -348,10 +372,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
             const formData = new FormData(form);
+            const busSelect = document.getElementById('form-field-bus');
             const dataToSubmit = {
                 token: token,
                 asistencia: formData.get('form_fields[asistencia]'),
-                bus: formData.get('form_fields[bus]') || "",
+                bus: busSelect ? busSelect.value : (formData.get('form_fields[bus]') || ""),
                 mensaje: formData.get('form_fields[mensaje]') || ""
             };
 
