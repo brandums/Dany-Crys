@@ -7,7 +7,6 @@ jQuery(document).ready(function ($) {
 (function () {
     if (document.body.classList.contains('elementor-editor-active')) return;
 
-    // Forzar scroll al inicio
     window.scrollTo(0, 0);
 
     const UI = {
@@ -198,9 +197,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 })();
 
-// Countdown Timer Logic - Target: March 16, 2026 at 13:00
+// Countdown Timer
 document.addEventListener('DOMContentLoaded', function () {
-    // JavaScript months are 0-indexed (Jan = 0, Feb = 1, Mar = 2)
     const targetDate = new Date(2026, 4, 16, 13, 0, 0).getTime();
 
     const daysEl = document.querySelector('.elementor-countdown-days');
@@ -222,30 +220,23 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        daysEl.innerText = days.toString().padStart(2, '0');
-        hoursEl.innerText = hours.toString().padStart(2, '0');
-        minutesEl.innerText = minutes.toString().padStart(2, '0');
-        secondsEl.innerText = seconds.toString().padStart(2, '0');
+        daysEl.innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+        hoursEl.innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+        minutesEl.innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+        secondsEl.innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
     }
 
-    // Initialize immediately
     updateCountdown();
-    // Update the counter every second
     setInterval(updateCountdown, 1000);
 });
 
-// Lógica para Token, Fetch y Formulario RSVP
+// ─── RSVP: Token, Fetch y Formulario ──────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async function () {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
-    // Cambiar esta URL una vez que se tenga el backend NodeJS real
-    const API_BASE_URL = 'http://localhost:3000/api';
+    // ✅ URL del backend en producción
+    const API_BASE_URL = 'https://backend-boda-crisdani.fly.dev/api';
 
     const nameDisplay = document.getElementById('guest-name-display');
     const ticketsDisplay = document.getElementById('guest-tickets-display');
@@ -265,32 +256,30 @@ document.addEventListener("DOMContentLoaded", async function () {
             const response = await fetch(`${API_BASE_URL}/invitado?token=${token}`);
             if (!response.ok) {
                 console.warn("No se pudo conectar al backend o el token es inválido.");
-                // Mock provisorio para testear la UI mientras creas tu backend
                 guestData = {
                     "Nombre(s)": "Invitado de Honor",
                     "Tickets": 3,
-                    "TicketsConfirmados": 0,
-                    "IraEnBus": "",
+                    "TicketsConfirmados": null,
+                    "IraEnBus": false,
                     "Token": token
                 };
             } else {
                 guestData = await response.json();
             }
 
-            // Llenar HTML
             if (nameDisplay) nameDisplay.innerText = guestData["Nombre(s)"];
             if (ticketsDisplay) ticketsDisplay.innerText = guestData["Tickets"];
             if (formNombre) formNombre.value = guestData["Nombre(s)"];
 
-            // Comprobar si ya respondió
-            if (guestData["TicketsConfirmados"] > 0 || guestData["RespondioFormulario"]) {
+            // Si ya respondió, reemplazar el formulario con mensaje de agradecimiento
+            if (guestData["RespondioFormulario"]) {
                 if (form) {
                     form.innerHTML = "<h3 style='text-align: center; color: #333;'>Ya has respondido a esta invitación. ¡Gracias!</h3>";
                 }
                 return;
             }
 
-            // Configurar Select de Asistencia
+            // Configurar opciones del select de asistencia
             if (formAsistencia) {
                 formAsistencia.innerHTML = "";
                 const totalTickets = parseInt(guestData["Tickets"]) || 1;
@@ -312,8 +301,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 optNo.value = "0";
                 optNo.innerText = "No podré asistir";
                 formAsistencia.appendChild(optNo);
-                
-                // Event listener for Bus control is now registered globally outside the token block.
+
                 formAsistencia.dispatchEvent(new Event('change'));
             }
 
@@ -327,16 +315,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (ticketsDisplay) ticketsDisplay.innerText = "-";
     }
 
-    // Controlar campo de Bus independientemente del token
+    // Control del campo Bus según asistencia seleccionada
     if (formAsistencia) {
         formAsistencia.addEventListener('change', function () {
             const busSelect = document.getElementById('form-field-bus');
-            // Validar ambas posibles formas en que un invitado indique que no va
-            const noVal = this.value === "0" || this.value === "No podré, lo siento";
-            if (noVal) {
-                if (busContainer) busContainer.style.display = 'block'; 
+            const noAsiste = this.value === "0" || this.value === "No podré, lo siento";
+
+            if (noAsiste) {
+                if (busContainer) busContainer.style.display = 'block';
                 if (busSelect) {
-                    let noOption = Array.from(busSelect.options).find(opt => opt.value === "No" || opt.text.toLowerCase() === "no");
+                    // Forzar "No" cuando no asiste
+                    let noOption = Array.from(busSelect.options).find(opt =>
+                        opt.value === "No" || opt.text.toLowerCase() === "no"
+                    );
                     if (!noOption) {
                         noOption = document.createElement('option');
                         noOption.value = "No";
@@ -344,23 +335,20 @@ document.addEventListener("DOMContentLoaded", async function () {
                         busSelect.appendChild(noOption);
                     }
                     busSelect.value = noOption.value;
-                    busSelect.disabled = true; // Deshabilitar para que no pueda cambiarlo
+                    busSelect.disabled = true;
                 }
             } else {
                 if (busContainer) busContainer.style.display = 'block';
-                if (busSelect) {
-                    busSelect.disabled = false; 
-                }
+                if (busSelect) busSelect.disabled = false;
             }
         });
 
-        // Trigger inicial si no hay token, para configurar el estado por defecto de la opción en el HTML (usualmente index 0, que es "Si asistiré")
         if (!token) {
             formAsistencia.dispatchEvent(new Event('change'));
         }
     }
 
-    // Interceptar envío del formulario
+    // Envío del formulario
     if (form) {
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -372,24 +360,30 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
             const formData = new FormData(form);
+            const asistenciaVal = formData.get('form_fields[asistencia]');
             const busSelect = document.getElementById('form-field-bus');
+            const busVal = busSelect ? busSelect.value : (formData.get('form_fields[bus]') || "");
+
+            // ✅ Convertir "Si"/"Ire en auto"/"No" al boolean que espera el backend
+            const iraEnBus = busVal === "Si";
+
             const dataToSubmit = {
                 token: token,
-                asistencia: formData.get('form_fields[asistencia]'),
-                bus: busSelect ? busSelect.value : (formData.get('form_fields[bus]') || ""),
+                asistencia: asistenciaVal,   // "2", "1", "0"
+                iraEnBus: iraEnBus,           // true / false
                 mensaje: formData.get('form_fields[mensaje]') || ""
             };
 
             try {
-                // Modificar esta URL a donde enviar los datos (NodeJS/Express)
                 const postResponse = await fetch(`${API_BASE_URL}/confirmar`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataToSubmit)
                 });
 
-                // MOCK Si no hay backend, puedes comentar las 2 líneas siguientes y asumirlo exitoso.
-                // if (!postResponse.ok) throw new Error("Error en servidor");
+                if (!postResponse.ok) {
+                    throw new Error("Error en servidor: " + postResponse.status);
+                }
 
                 form.innerHTML = "<h3 style='text-align: center; color: #333;'>¡Gracias por confirmar tu asistencia! Hemos registrado tus datos.</h3>";
             } catch (error) {
